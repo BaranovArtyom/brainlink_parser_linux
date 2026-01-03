@@ -84,8 +84,8 @@ att = deque(maxlen=WINDOW_SEC)
 med = deque(maxlen=WINDOW_SEC)
 
 fig, ax = plt.subplots()
-line_att, = ax.plot([], [], label="ATT", color="blue")
-line_med, = ax.plot([], [], label="MED", color="red")
+line_att, = ax.plot([], [], label="ATT", color="red")
+line_med, = ax.plot([], [], label="MED", color="blue")
 
 ax.set_ylim(0, 100)
 ax.set_title("BrainLink ATT / MED (real-time)")
