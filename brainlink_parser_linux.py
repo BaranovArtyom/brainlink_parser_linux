@@ -245,24 +245,40 @@ class BrainLinkParser:
             self._last_eeg_snapshot = snap
             self.eeg_callback(self._eeg)
 
-    def _emit_ext_if_changed(self, updated: bool):
-        if not updated or not self.eeg_extend_callback:
+    # def _emit_ext_if_changed(self, updated: bool):
+    #     if not updated or not self.eeg_extend_callback:
+    #         return
+
+    #     now = time.time()
+    #     if now - self._last_ext_emit_time < self._ext_emit_interval:
+    #         return
+
+    #     snap = {
+    #         "battery": self._ext.battery,
+    #         "temperature": self._ext.temperature,
+    #         "heart": self._ext.heart,
+    #         "gyro": self._ext.gyro,
+    #         "rr": self._ext.rr,
+    #         "version": self._ext.version,
+    #     }
+
+    #     if snap != self._last_ext_snapshot:
+    #         self._last_ext_snapshot = snap
+    #         self._last_ext_emit_time = now
+    #         self.eeg_extend_callback(self._ext)
+
+    def _emit_ext_if_changed(self, ext_packet_seen: bool):
+        if not self.eeg_extend_callback:
             return
 
         now = time.time()
         if now - self._last_ext_emit_time < self._ext_emit_interval:
             return
 
-        snap = {
-            "battery": self._ext.battery,
-            "temperature": self._ext.temperature,
-            "heart": self._ext.heart,
-            "gyro": self._ext.gyro,
-            "rr": self._ext.rr,
-            "version": self._ext.version,
-        }
+        snap = self._ext.__dict__.copy()
 
-        if snap != self._last_ext_snapshot:
+        if ext_packet_seen or snap != self._last_ext_snapshot:
             self._last_ext_snapshot = snap
             self._last_ext_emit_time = now
             self.eeg_extend_callback(self._ext)
+
